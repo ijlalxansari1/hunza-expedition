@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import { Mountain, ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";

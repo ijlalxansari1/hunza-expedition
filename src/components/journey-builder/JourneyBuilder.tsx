@@ -1,17 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
-  Compass,
   CheckCircle2,
-  Calendar,
-  Users,
-  MapPin,
-  Sparkles,
   ArrowRight,
   ArrowLeft,
-  ShieldCheck,
   Clock,
   Send,
   AlertCircle,
@@ -53,7 +47,9 @@ export function JourneyBuilder({ destinations }: JourneyBuilderProps) {
     accommodationStyle: "comfort_hotels" as "standard_guesthouse" | "comfort_hotels" | "heritage_boutique" | "flexible",
 
     // Step 3: Destinations
-    selectedDestinations: [] as string[],
+    selectedDestinations: destinations
+      .filter((destination) => destination.slug === preSelectedSlug)
+      .map((destination) => destination.name),
 
     // Step 4: Interests
     selectedInterests: [] as string[],
@@ -65,21 +61,6 @@ export function JourneyBuilder({ destinations }: JourneyBuilderProps) {
     // Anti-spam honeypot
     website_field: "",
   });
-
-  // Pre-select destination if passed in URL
-  useEffect(() => {
-    if (preSelectedSlug) {
-      const match = destinations.find((d) => d.slug === preSelectedSlug);
-      if (match) {
-        setFormData((prev) => ({
-          ...prev,
-          selectedDestinations: prev.selectedDestinations.includes(match.name)
-            ? prev.selectedDestinations
-            : [...prev.selectedDestinations, match.name],
-        }));
-      }
-    }
-  }, [preSelectedSlug, destinations]);
 
   const interestOptions = [
     { id: "heritage", label: "Ancient Forts & Silk Route Heritage", desc: "Baltit, Altit, Shigar, and historical settlements" },

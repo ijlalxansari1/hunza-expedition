@@ -8,10 +8,10 @@ import { Button } from "../ui/Button";
 
 interface DestinationCardProps {
   destination: Destination;
+  placesCount?: number;
 }
 
-export function DestinationCard({ destination }: DestinationCardProps) {
-  const placesCount = destination.placesOfInterest?.length || 0;
+export function DestinationCard({ destination, placesCount = destination.placesOfInterest?.length || 0 }: DestinationCardProps) {
 
   return (
     <div className="group bg-white rounded-xl border border-stone-200/90 overflow-hidden subtle-shadow subtle-shadow-hover transition-all duration-300 flex flex-col h-full">

@@ -31,7 +31,7 @@ export function Button({
 
   const variantStyles = {
     primary:
-      "bg-[#12283a] text-white hover:bg-[#1a3850] focus:ring-[#12283a] shadow-sm",
+      "bg-[#01411c] text-white hover:bg-[#176b3a] focus:ring-[#176b3a] shadow-sm",
     secondary:
       "bg-stone-100 text-stone-900 hover:bg-stone-200 focus:ring-stone-400",
     outline:
@@ -39,7 +39,7 @@ export function Button({
     ghost:
       "text-stone-700 hover:bg-stone-100 focus:ring-stone-300",
     accent:
-      "bg-[#b4532a] text-white hover:bg-[#9a4521] focus:ring-[#b4532a] shadow-sm",
+      "bg-[#176b3a] text-white hover:bg-[#01411c] focus:ring-[#176b3a] shadow-sm",
   };
 
   const combinedClasses = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`;

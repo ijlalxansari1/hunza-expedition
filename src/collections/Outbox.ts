@@ -1,8 +1,15 @@
 // src/collections/Outbox.ts
 import type { CollectionConfig } from 'payload';
+import { adminAccess } from '../lib/payloadAccess.ts';
 
 export const Outbox: CollectionConfig = {
   slug: 'outbox',
+  access: {
+    create: () => false,
+    read: adminAccess,
+    update: adminAccess,
+    delete: adminAccess,
+  },
   fields: [
     { name: 'enquiryId', type: 'relationship', relationTo: 'enquiries', required: true },
     { name: 'emailPayload', type: 'json', required: true },

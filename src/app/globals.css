@@ -1,22 +1,22 @@
 ﻿@import "tailwindcss";
 
 @layer base {
-  :root {
-    --background: #fbfaf7;
-    --foreground: #121926;
+  .website-shell {
+    --background: #f6f8f3;
+    --foreground: #17231b;
     --card: #ffffff;
-    --primary: #12283a;
-    --primary-foreground: #fcfbf8;
-    --accent: #2e5a44;
-    --accent-warm: #b4532a;
-    --accent-glacier: #1f6b85;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --ring: #12283a;
+    --primary: #01411c;
+    --primary-foreground: #fcfdf9;
+    --accent: #176b3a;
+    --accent-warm: #33834f;
+    --accent-glacier: #28724a;
+    --muted: #617368;
+    --border: #dce5dc;
+    --ring: #176b3a;
     --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --shadow-card: 0 2px 12px -2px rgba(18, 40, 58, 0.07), 0 1px 4px -1px rgba(18, 40, 58, 0.04);
-    --shadow-card-hover: 0 8px 24px -4px rgba(18, 40, 58, 0.12), 0 4px 8px -2px rgba(18, 40, 58, 0.06);
-    --shadow-elevated: 0 16px 40px -8px rgba(18, 40, 58, 0.16), 0 4px 12px -2px rgba(18, 40, 58, 0.08);
+    --shadow-card: 0 2px 12px -2px rgba(1, 65, 28, 0.07), 0 1px 4px -1px rgba(1, 65, 28, 0.04);
+    --shadow-card-hover: 0 8px 24px -4px rgba(1, 65, 28, 0.12), 0 4px 8px -2px rgba(1, 65, 28, 0.06);
+    --shadow-elevated: 0 16px 40px -8px rgba(1, 65, 28, 0.16), 0 4px 12px -2px rgba(1, 65, 28, 0.08);
   }
   html {
     -webkit-text-size-adjust: 100%;
@@ -24,23 +24,81 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  body {
+  .website-shell {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     line-height: 1.6;
     min-height: 100vh;
   }
-  h1, h2, h3, h4, h5, h6 {
+  .website-shell h1,
+  .website-shell h2,
+  .website-shell h3,
+  .website-shell h4,
+  .website-shell h5,
+  .website-shell h6 {
     color: var(--primary);
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.025em;
   }
-  h1 { letter-spacing: -0.03em; }
-  a, button { -webkit-tap-highlight-color: transparent; }
-  ::selection { background: var(--primary); color: #fff; }
+  .website-shell h1 { letter-spacing: -0.03em; }
+  .website-shell a,
+  .website-shell button { -webkit-tap-highlight-color: transparent; }
+  .website-shell ::selection { background: var(--primary); color: #fff; }
 }
+
+.website-shell [class~="bg-[#12283a]"] { background-color: #01411c; }
+.website-shell [class~="bg-[#12283a]/10"] {
+  background-color: rgba(1, 65, 28, 0.1);
+}
+
+.website-shell [class~="text-[#12283a]"] { color: #01411c; }
+.website-shell [class~="border-[#12283a]"] { border-color: #01411c; }
+.website-shell [class~="focus:ring-[#12283a]"] { --tw-ring-color: #176b3a; }
+.website-shell [class~="hover:bg-[#1a3850]"]:hover { background-color: #176b3a; }
+.website-shell [class~="hover:text-[#12283a]"]:hover { color: #01411c; }
+
+.website-shell [class~="bg-[#b4532a]"],
+.website-shell [class~="bg-[#b4532a]/10"] {
+  background-color: #176b3a;
+}
+
+.website-shell [class~="bg-[#b4532a]/10"] {
+  background-color: rgba(23, 107, 58, 0.1);
+}
+
+.website-shell [class~="text-[#b4532a]"] { color: #176b3a; }
+.website-shell [class~="border-[#b4532a]"] { border-color: #176b3a; }
+.website-shell [class~="focus:ring-[#b4532a]"] { --tw-ring-color: #176b3a; }
+.website-shell [class~="hover:bg-[#9a4521]"]:hover { background-color: #01411c; }
+.website-shell [class~="hover:text-[#b4532a]"]:hover { color: #176b3a; }
+.website-shell [class~="group"]:hover [class~="group-hover:text-[#b4532a]"] { color: #176b3a; }
+.website-shell [class~="shadow-[#b4532a]/30"] { --tw-shadow-color: rgba(23, 107, 58, 0.3); }
+
+.website-shell [class~="bg-[#2e5a44]"],
+.website-shell [class~="bg-[#2e5a44]/10"] {
+  background-color: #01411c;
+}
+
+.website-shell [class~="bg-[#2e5a44]/10"] {
+  background-color: rgba(1, 65, 28, 0.1);
+}
+
+.website-shell [class~="text-[#2e5a44]"] { color: #01411c; }
+.website-shell [class~="border-[#2e5a44]"] { border-color: #01411c; }
+.website-shell [class~="text-[#1f6b85]"] { color: #176b3a; }
+.website-shell [class~="bg-[#0b1622]"] { background-color: #012d14; }
+.website-shell [class~="bg-[#fbfaf7]"] { background-color: var(--background); }
+.website-shell [class~="text-amber-300"] { color: #c9e6a8; }
+.website-shell [class~="text-amber-300/90"] { color: rgba(201, 230, 168, 0.9); }
+.website-shell [class~="text-amber-400"],
+.website-shell [class~="text-amber-400/90"] { color: #a8cd83; }
+.website-shell [class~="bg-amber-50"] { background-color: #f1f7eb; }
+.website-shell [class~="bg-amber-500/10"] { background-color: rgba(91, 139, 70, 0.1); }
+.website-shell [class~="text-emerald-400"] { color: #86c98e; }
+.website-shell [class~="bg-emerald-100"] { background-color: #e6f2e4; }
+.website-shell [class~="text-emerald-700"] { color: #2f7045; }
 
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(16px); }
@@ -63,65 +121,65 @@
   50% { transform: translateY(-6px); }
 }
 
-.animate-fade-in-up { animation: fade-in-up 0.5s ease-out both; }
-.animate-fade-in { animation: fade-in 0.4s ease-out both; }
-.animate-scale-in { animation: scale-in 0.3s ease-out both; }
-.animate-float { animation: float 4s ease-in-out infinite; }
-.delay-100 { animation-delay: 0.1s; }
-.delay-150 { animation-delay: 0.15s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
+.website-shell .animate-fade-in-up { animation: fade-in-up 0.5s ease-out both; }
+.website-shell .animate-fade-in { animation: fade-in 0.4s ease-out both; }
+.website-shell .animate-scale-in { animation: scale-in 0.3s ease-out both; }
+.website-shell .animate-float { animation: float 4s ease-in-out infinite; }
+.website-shell .delay-100 { animation-delay: 0.1s; }
+.website-shell .delay-150 { animation-delay: 0.15s; }
+.website-shell .delay-200 { animation-delay: 0.2s; }
+.website-shell .delay-300 { animation-delay: 0.3s; }
+.website-shell .delay-400 { animation-delay: 0.4s; }
+.website-shell .delay-500 { animation-delay: 0.5s; }
 
-.animate-in { animation-fill-mode: both; }
-.fade-in { animation-name: fade-in; }
-.zoom-in-95 { animation-name: scale-in; }
-.slide-in-from-top-2 { animation-name: slide-in-from-top; }
-.duration-150 { animation-duration: 0.15s; }
-.duration-200 { animation-duration: 0.2s; }
-.duration-300 { animation-duration: 0.3s; }
+.website-shell .animate-in { animation-fill-mode: both; }
+.website-shell .fade-in { animation-name: fade-in; }
+.website-shell .zoom-in-95 { animation-name: scale-in; }
+.website-shell .slide-in-from-top-2 { animation-name: slide-in-from-top; }
+.website-shell .duration-150 { animation-duration: 0.15s; }
+.website-shell .duration-200 { animation-duration: 0.2s; }
+.website-shell .duration-300 { animation-duration: 0.3s; }
 
-.editorial-lead {
+.website-shell .editorial-lead {
   font-size: 1.125rem;
   line-height: 1.8;
   color: #334155;
   font-weight: 400;
 }
 
-.mountain-gradient {
+.website-shell .mountain-gradient {
   background: linear-gradient(180deg, rgba(14, 27, 42, 0.6) 0%, rgba(14, 27, 42, 0.92) 100%);
 }
 
-.subtle-shadow { box-shadow: var(--shadow-card); }
+.website-shell .subtle-shadow { box-shadow: var(--shadow-card); }
 
-.subtle-shadow-hover:hover {
+.website-shell .subtle-shadow-hover:hover {
   box-shadow: var(--shadow-card-hover);
   transition: box-shadow 0.25s ease;
 }
 
-.elevated-shadow { box-shadow: var(--shadow-elevated); }
+.website-shell .elevated-shadow { box-shadow: var(--shadow-elevated); }
 
-.glass {
+.website-shell .glass {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
-.scrollbar-none::-webkit-scrollbar { display: none; }
+.website-shell .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.website-shell .scrollbar-none::-webkit-scrollbar { display: none; }
 
-.prose { color: #374151; }
-.prose p { margin-bottom: 1.25em; line-height: 1.75; }
-.prose strong { color: var(--primary); font-weight: 600; }
+.website-shell .prose { color: #374151; }
+.website-shell .prose p { margin-bottom: 1.25em; line-height: 1.75; }
+.website-shell .prose strong { color: var(--primary); font-weight: 600; }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="number"],
-input[type="date"],
-select,
-textarea {
+.website-shell input[type="text"],
+.website-shell input[type="email"],
+.website-shell input[type="tel"],
+.website-shell input[type="number"],
+.website-shell input[type="date"],
+.website-shell select,
+.website-shell textarea {
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }

@@ -1,39 +1,54 @@
 // pages/api/enquiry.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import rateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
-import Redis from 'ioredis';
+import { rateLimiter } from '@/lib/rateLimiter';
+import { saveEnquiry } from '@/lib/enquiryStore';
+import { enquirySchema } from '@/lib/validations/enquiry';
 
-// Redis client – reads URL from env, falls back to localhost for dev
-const redisClient = new Redis(process.env.REDIS_URL || 'redis://127.0.0.1:6379');
-
-// Configure the limiter
-const limiter = rateLimit({
-  store: new RedisStore({
-    sendCommand: ((...args: string[]) => redisClient.call(args[0], ...args.slice(1))) as any,
-  }),
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000, // 1 minute default
-  max: Number(process.env.RATE_LIMIT_MAX) || 100,
-  handler: (_req, res) => {
-    res.status(429).json({ error: 'Too many requests, please try again later.' });
-  },
-  keyGenerator: (req) => {
-    if (process.env.TRUSTED_PROXY === 'true' && req.headers['x-forwarded-for']) {
-      const forwarded = Array.isArray(req.headers['x-forwarded-for'])
-        ? req.headers['x-forwarded-for'][0]
-        : req.headers['x-forwarded-for'];
-      return (forwarded?.split(',')[0].trim() || req.socket.remoteAddress || '') as string;
-    }
-    return (req.socket.remoteAddress || '') as string;
-  },
-  skipFailedRequests: true,
-});
+const applyRateLimit = rateLimiter as unknown as (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  next: (error?: unknown) => void,
+) => void;
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Apply the limiter, then handle the request.
-  (limiter as any)(req, res, () => {
-    // TODO: integrate with Payload Enquiry creation logic.
-    // For now, just acknowledge receipt.
-    res.status(200).json({ message: 'Enquiry received' });
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ success: false, message: 'Method not allowed.' });
+  }
+
+  applyRateLimit(req, res, (error) => {
+    if (error) {
+      console.error('Error applying enquiry rate limit:', error);
+      return res.status(500).json({ success: false, message: 'Unable to process enquiry.' });
+    }
+    if (res.writableEnded) return;
+
+    void submitEnquiry(req, res);
   });
+}
+
+async function submitEnquiry(req: NextApiRequest, res: NextApiResponse) {
+  const result = enquirySchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      errors: result.error.flatten().fieldErrors,
+      message: 'Please complete the required fields accurately.',
+    });
+  }
+
+  try {
+    const { referenceId } = await saveEnquiry(result.data);
+    return res.status(200).json({
+      success: true,
+      referenceId,
+      message: 'Your journey enquiry has been received for manual review.',
+    });
+  } catch (error) {
+    console.error('Error processing enquiry submission:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An unexpected error occurred while saving your enquiry.',
+    });
+  }
 }

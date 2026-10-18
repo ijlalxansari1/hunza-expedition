@@ -1,0 +1,45 @@
+import type { Metadata } from 'next';
+import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
+import { EditorialArticlePage } from '@/components/editorial/EditorialArticlePage';
+import { getArticleBySlug, getPublishedArticles } from '@/lib/editorialContent';
+
+export const dynamic = 'force-dynamic';
+
+type GuidePageProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { isEnabled } = await draftMode();
+  const article = await getArticleBySlug(slug, 'guide', isEnabled);
+  if (!article) return { title: 'Guide Not Found | Hunza Expeditions', robots: { index: false } };
+  const title = article.seoTitle || `${article.title} | Hunza Expeditions`;
+  return {
+    title,
+    description: article.metaDescription || article.excerpt,
+    alternates: { canonical: `/guides/${article.slug}` },
+    robots: isEnabled ? { index: false, follow: false } : undefined,
+    openGraph: {
+      type: 'article',
+      title,
+      description: article.metaDescription || article.excerpt,
+      images: [{ url: article.imageUrl, alt: article.imageAlt || article.title }],
+      publishedTime: article.publishedAt || undefined,
+    },
+  };
+}
+
+export default async function GuidePage({ params }: GuidePageProps) {
+  const { slug } = await params;
+  const { isEnabled } = await draftMode();
+  const article = await getArticleBySlug(slug, 'guide', isEnabled);
+  if (!article) notFound();
+  const publishedArticles = await getPublishedArticles('guide');
+  const related = publishedArticles
+    .filter((item) => item.slug !== slug && (
+      article.relatedArticles?.includes(item.slug) || item.category === article.category
+    ))
+    .slice(0, 3);
+
+  return <EditorialArticlePage article={article} contentType="guide" preview={isEnabled} relatedArticles={related} />;
+}

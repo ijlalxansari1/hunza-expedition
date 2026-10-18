@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from "react";
-import { Search, Compass, X, Filter } from "lucide-react";
+import { Search, Compass, X } from "lucide-react";
 import { Tour } from "@/types";
 import { TourCard } from "./TourCard";
 

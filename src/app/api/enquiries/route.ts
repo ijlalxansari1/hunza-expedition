@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // 1. Zod Validation & Anti-Spam Check
     const result = enquirySchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Anti-spam honeypot check: website_field must be empty
     if (result.data.website_field && result.data.website_field.length > 0) {
       return NextResponse.json(
         { success: false, message: "Submission rejected." },
@@ -27,7 +25,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Save enquiry and generate unique reference
     const { referenceId } = await saveEnquiry(result.data);
 
     return NextResponse.json({

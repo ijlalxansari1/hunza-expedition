@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Mountain, ArrowRight, Compass } from "lucide-react";
+import { Mountain, ArrowRight, Compass } from "lucide-react";
 import { Tour } from "@/types";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";

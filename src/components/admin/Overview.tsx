@@ -1,0 +1,227 @@
+import Link from 'next/link';
+import {
+  ArrowUpRight,
+  CircleAlert,
+  FileText,
+  Inbox,
+  Layers3,
+  Users,
+} from 'lucide-react';
+import type { AdminViewServerProps } from 'payload';
+import { getContentOverview, getEnquiryOverview } from '@/lib/adminOverview';
+import { hasAdminRole, hasOperationsRole } from '@/lib/payloadAccess';
+import { EnquiryActivity } from './EnquiryActivity';
+
+type MetricProps = {
+  label: string;
+  value: number | string;
+  detail: string;
+  icon: typeof FileText;
+};
+
+function Metric({ label, value, detail, icon: Icon }: MetricProps) {
+  return (
+    <section className="metric">
+      <div className="metricTop">
+        <div className="metricCopy">
+          <p className="metricLabel">{label}</p>
+          <p className="metricValue">
+            {value}
+          </p>
+        </div>
+        <span className="metricIcon">
+          <Icon aria-hidden="true" />
+        </span>
+      </div>
+      <p className="metricDetail">{detail}</p>
+    </section>
+  );
+}
+
+export async function Overview({ initPageResult }: AdminViewServerProps) {
+  if (!hasOperationsRole(initPageResult.req.user)) {
+    return (
+      <main className="adminPermissionError" role="alert">
+        Only administrators and operations staff can view the operations overview.
+      </main>
+    );
+  }
+
+  const [enquiries, content] = await Promise.all([
+    getEnquiryOverview(initPageResult.req),
+    getContentOverview(initPageResult.req),
+  ]);
+
+  const enquiryValue = enquiries.state === 'available' ? enquiries.total : 'Unavailable';
+  const newValue = enquiries.state === 'available' ? enquiries.newCount : 'Unavailable';
+  const inProgressValue = enquiries.state === 'available' ? enquiries.inProgressCount : 'Unavailable';
+  const publishedValue = content.destinations + content.places + content.tours
+    + content.experiences + content.articles + content.faqs;
+
+  return (
+    <main className="dashboard">
+      <div className="dashboardInner">
+        <header className="header">
+          <div className="headingGroup">
+            <nav aria-label="Breadcrumb" className="breadcrumb">
+              <ol>
+                <li><Link href="/admin">Admin</Link></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">Overview</li>
+              </ol>
+            </nav>
+            <p className="eyebrow"><span className="eyebrowMark" /> Hunza Expeditions <span>•</span> Admin workspace</p>
+            <h1 className="title">Operations overview</h1>
+            <p className="lede">
+              Your enquiries and travel content, all in one place.
+            </p>
+          </div>
+          <div className="actions">
+            <Link
+              href="/admin/collections/enquiries"
+              className="primaryAction"
+            >
+              <Inbox aria-hidden="true" /> Review enquiries
+            </Link>
+            <Link
+              href="/admin/collections/destinations"
+              className="secondaryAction"
+            >
+              <Layers3 aria-hidden="true" /> Manage content <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+        </header>
+
+        <section aria-label="Data source status" className="noticeGrid">
+          <div className="notice noticeInfo">
+            <CircleAlert aria-hidden="true" />
+            <p>
+              Enquiries are stored and managed in Payload.
+            </p>
+          </div>
+        </section>
+
+        <section aria-label="Business metrics" className="metricGrid">
+          <Metric
+            label="Total enquiries"
+            value={enquiryValue}
+            detail="All received trip requests"
+            icon={FileText}
+          />
+          <Metric
+            label="Needs a response"
+            value={newValue}
+            detail="New requests awaiting review"
+            icon={CircleAlert}
+          />
+          <Metric
+            label="In progress"
+            value={inProgressValue}
+            detail="Being reviewed or quoted"
+            icon={Users}
+          />
+          <Metric
+            label="Published content"
+            value={publishedValue}
+            detail={`${content.destinations} destinations · ${content.places} places · ${content.tours} tours · ${content.experiences} experiences · ${content.articles} guides · ${content.faqs} FAQs`}
+            icon={Layers3}
+          />
+        </section>
+
+        <section className="contentGrid">
+          {enquiries.state === 'unavailable' ? (
+            <section className="recentPanel" aria-labelledby="recent-enquiries-title">
+              <div className="sectionHeading">
+                <span className="sectionEyebrow">Inbox</span>
+                <h2 id="recent-enquiries-title">Recent enquiries</h2>
+              </div>
+              <div className="emptyState" role="alert">
+                <CircleAlert aria-hidden="true" />
+                <strong>Enquiry data is unavailable</strong>
+                <span>Check the configured enquiry store, then refresh the dashboard.</span>
+              </div>
+            </section>
+          ) : (
+            <EnquiryActivity enquiries={enquiries.recent} total={enquiries.total} />
+          )}
+
+          <aside className="aside">
+            <section className="asideSection">
+              <span className="sectionEyebrow">Connected sources</span>
+              <h2 className="asideTitle">Workspace status</h2>
+              <dl className="dataList">
+                <div>
+                  <dt><span className="sourceDot" /> Enquiries</dt>
+                  <dd>Payload · Live</dd>
+                </div>
+                <div>
+                  <dt>
+                    <span className="sourceDot" />
+                    Travel content
+                  </dt>
+                  <dd>Payload · Live</dd>
+                </div>
+                <div>
+                  <dt><span className="sourceDotMuted" /> Bookings</dt>
+                  <dd>Not configured</dd>
+                </div>
+              </dl>
+              <p className="asideNote">
+                Booking and payment tracking is not configured.
+              </p>
+            </section>
+
+            <section className="asideSection">
+              <span className="sectionEyebrow">Shortcuts</span>
+              <h2 className="asideTitle">Quick links</h2>
+              <ul className="quickLinks">
+                <li>
+                  <Link href="/admin/collections/destinations">
+                    Manage destinations <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/tours">
+                    Manage tours <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/places">
+                    Manage places <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/experiences">
+                    Manage experiences <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/articles">
+                    Manage travel guides & blogs <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/authors">
+                    Manage author profiles <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/faqs">
+                    Manage FAQs <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                {hasAdminRole(initPageResult.req.user) && (
+                  <li>
+                    <Link href="/admin/collections/users">
+                      Manage staff access <ArrowUpRight aria-hidden="true" />
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </section>
+          </aside>
+        </section>
+      </div>
+    </main>
+  );
+}

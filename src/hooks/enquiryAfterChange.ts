@@ -1,8 +1,11 @@
 // src/hooks/enquiryAfterChange.ts
 import type { CollectionAfterChangeHook } from 'payload';
 
-export const afterChangeHook: CollectionAfterChangeHook = async ({ req, doc }) => {
-  // Ensure the same request object is threaded to maintain transaction context.
+export const afterChangeHook: CollectionAfterChangeHook = async ({ operation, req, doc }) => {
+  if (operation !== 'create' || req.context.skipEnquiryOutbox === true) {
+    return doc;
+  }
+
   await req.payload.create({
     req,
     collection: 'outbox',
@@ -10,9 +13,16 @@ export const afterChangeHook: CollectionAfterChangeHook = async ({ req, doc }) =
       enquiryId: doc.id,
       emailPayload: {
         to: doc.email,
-        subject: 'New enquiry received',
-        body: doc.message,
+        subject: `New journey enquiry: ${doc.referenceId}`,
+        body: [
+          `Reference: ${doc.referenceId}`,
+          `Name: ${doc.fullName}`,
+          `Email: ${doc.email}`,
+          `Destinations: ${Array.isArray(doc.selectedDestinations) ? doc.selectedDestinations.join(', ') : ''}`,
+          doc.specialRequests,
+        ].filter(Boolean).join('\n'),
       },
     },
   });
+  return doc;
 };

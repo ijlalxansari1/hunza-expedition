@@ -4,12 +4,14 @@ import React, { useState, useMemo } from "react";
 import { Search, MapPin, X } from "lucide-react";
 import { Destination } from "@/types";
 import { DestinationCard } from "./DestinationCard";
+import type { PlaceContent } from "@/lib/editorialContent";
 
 interface DestinationGridProps {
   destinations: Destination[];
+  places: PlaceContent[];
 }
 
-export function DestinationGrid({ destinations }: DestinationGridProps) {
+export function DestinationGrid({ destinations, places }: DestinationGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
 
@@ -23,13 +25,16 @@ export function DestinationGrid({ destinations }: DestinationGridProps) {
       const matchesSearch =
         dest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         dest.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dest.placesOfInterest?.some((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        places.some((place) => (
+          place.destinationSlug === dest.slug
+          && place.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ));
 
       const matchesRegion = selectedRegion === "all" || dest.region === selectedRegion;
 
       return matchesSearch && matchesRegion;
     });
-  }, [destinations, searchQuery, selectedRegion]);
+  }, [destinations, places, searchQuery, selectedRegion]);
 
   return (
     <div className="space-y-8">
@@ -99,7 +104,11 @@ export function DestinationGrid({ destinations }: DestinationGridProps) {
       {filteredDestinations.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {filteredDestinations.map((destination) => (
-            <DestinationCard key={destination._id} destination={destination} />
+            <DestinationCard
+              key={destination._id}
+              destination={destination}
+              placesCount={places.filter((place) => place.destinationSlug === destination.slug).length}
+            />
           ))}
         </div>
       ) : (
