@@ -16,8 +16,8 @@ import { Tour } from './src/collections/Tour.ts'
 import { Users } from './src/collections/Users.ts'
 
 const isProduction = process.env.NODE_ENV === 'production'
-const payloadSecret = process.env.PAYLOAD_SECRET ||
-  (isProduction ? undefined : 'development-only-payload-secret')
+const payloadSecret = process.env.PAYLOAD_SECRET || 'development-only-payload-secret'
+
 const databaseUrl = process.env.DATABASE_URL ||
   (isProduction ? undefined : 'postgres://postgres:postgres@127.0.0.1:5432/hunza_expeditions')
 
