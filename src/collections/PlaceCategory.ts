@@ -19,7 +19,7 @@ export const PlaceCategory: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'parentCategory', 'displayOrder', 'isActive', 'publicationStatus'],
-    group: 'Travel content',
+    group: 'Places & Accommodation',
     description: 'Manage place classifications and category landing pages.',
     preview: (doc) => {
       if (typeof doc.slug !== 'string') return null;

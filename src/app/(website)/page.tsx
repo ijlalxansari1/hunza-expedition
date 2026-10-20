@@ -11,11 +11,17 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { DestinationCard } from "@/components/destinations/DestinationCard";
 import { getPublishedDestinations } from "@/lib/catalog";
+import { getPublishedPlaces, getPublishedPlaceCategories } from "@/lib/editorialContent";
+import { WaypointsSection } from "@/components/waypoints/WaypointsSection";
 
 export const revalidate = 30;
 
 export default async function HomePage() {
-  const destinations = await getPublishedDestinations();
+  const [destinations, places, categories] = await Promise.all([
+    getPublishedDestinations(),
+    getPublishedPlaces(),
+    getPublishedPlaceCategories(),
+  ]);
   const featuredDestinations = destinations.slice(0, 3);
 
   return (
@@ -100,7 +106,10 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* 2. DISCOVERY INTRO & CORE PHILOSOPHY */}
+      {/* 2. WAYPOINTS INTERACTIVE MAP SECTION */}
+      <WaypointsSection places={places} categories={categories} />
+
+      {/* 3. DISCOVERY INTRO & CORE PHILOSOPHY */}
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">

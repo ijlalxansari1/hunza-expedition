@@ -14,7 +14,7 @@ export const FAQ: CollectionConfig = {
   admin: {
     useAsTitle: 'question',
     defaultColumns: ['question', 'category', 'displayOrder', 'publicationStatus'],
-    group: 'Travel content',
+    group: 'Stories, Guides & Pages',
   },
   fields: [
     { name: 'question', type: 'text', required: true },

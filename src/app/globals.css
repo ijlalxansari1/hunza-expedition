@@ -1,5 +1,7 @@
-﻿@import "tailwindcss";
-
+@import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+@import 'leaflet.markercluster/dist/MarkerCluster.css';
+@import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 @layer base {
   .website-shell {
     --background: #f6f8f3;
@@ -132,13 +134,23 @@
 .website-shell .delay-400 { animation-delay: 0.4s; }
 .website-shell .delay-500 { animation-delay: 0.5s; }
 
-.website-shell .animate-in { animation-fill-mode: both; }
-.website-shell .fade-in { animation-name: fade-in; }
-.website-shell .zoom-in-95 { animation-name: scale-in; }
-.website-shell .slide-in-from-top-2 { animation-name: slide-in-from-top; }
-.website-shell .duration-150 { animation-duration: 0.15s; }
-.website-shell .duration-200 { animation-duration: 0.2s; }
-.website-shell .duration-300 { animation-duration: 0.3s; }
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.website-shell .animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .website-shell .animate-marquee {
+    animation: none;
+    overflow-x: auto;
+  }
+}
 
 .website-shell .editorial-lead {
   font-size: 1.125rem;

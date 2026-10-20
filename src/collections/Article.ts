@@ -15,7 +15,7 @@ export const Article: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'contentType', 'category', 'publicationStatus', 'updatedAt'],
-    group: 'Travel content',
+    group: 'Stories, Guides & Pages',
     preview: (doc) => {
       if (typeof doc.slug !== 'string') return null;
       const baseUrl = process.env.SERVER_URL || 'http://localhost:3000';

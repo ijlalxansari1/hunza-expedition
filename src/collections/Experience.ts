@@ -14,7 +14,7 @@ export const Experience: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'location', 'operationalStatus', 'publicationStatus'],
-    group: 'Travel content',
+    group: 'Activities & Experiences',
   },
   fields: [
     { name: 'title', type: 'text', required: true },

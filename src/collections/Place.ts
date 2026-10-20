@@ -35,7 +35,7 @@ export const Place: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'geographicArea', 'region', 'primaryCategory', 'publicationStatus'],
-    group: 'Travel content',
+    group: 'Places & Accommodation',
     preview: (doc) => {
       if (typeof doc.slug !== 'string') return null;
       const baseUrl = process.env.SERVER_URL || 'http://localhost:3000';

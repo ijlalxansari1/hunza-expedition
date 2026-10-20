@@ -4,6 +4,16 @@ import { adminAccess } from '../lib/payloadAccess.ts';
 
 export const Outbox: CollectionConfig = {
   slug: 'outbox',
+  labels: {
+    singular: 'Outbox Email',
+    plural: 'Outbox Delivery Queue',
+  },
+  admin: {
+    useAsTitle: 'enquiryId',
+    defaultColumns: ['enquiryId', 'status', 'retryCount', 'updatedAt'],
+    group: 'Enquiries & Sales',
+    description: 'System email delivery queue for customer and operational notifications.',
+  },
   access: {
     create: () => false,
     read: adminAccess,

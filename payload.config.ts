@@ -13,6 +13,9 @@ import { OfficialDesignation } from './src/collections/OfficialDesignation.ts'
 import { Place } from './src/collections/Place.ts'
 import { PlaceCategory } from './src/collections/PlaceCategory.ts'
 import { Tour } from './src/collections/Tour.ts'
+import { Departure } from './src/collections/Departure.ts'
+import { Activity } from './src/collections/Activity.ts'
+import { Accommodation } from './src/collections/Accommodation.ts'
 import { Users } from './src/collections/Users.ts'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -68,8 +71,11 @@ export default buildConfig({
     Destination,
     Place,
     PlaceCategory,
+    Accommodation,
     OfficialDesignation,
     Tour,
+    Departure,
+    Activity,
     Experience,
     Article,
     FAQ,

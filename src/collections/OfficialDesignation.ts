@@ -36,7 +36,7 @@ export const OfficialDesignation: CollectionConfig = {
   admin: {
     useAsTitle: 'officialName',
     defaultColumns: ['officialName', 'designationType', 'designationStatus', 'verificationStatus', 'publicationStatus'],
-    group: 'Travel content',
+    group: 'Places & Accommodation',
     description: 'Record official protected-area and UNESCO designations with verification sources.',
   },
   hooks: {

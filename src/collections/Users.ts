@@ -16,8 +16,15 @@ export const Users: CollectionConfig = {
     update: selfOrAdminAccess,
     delete: adminAccess,
   },
+  labels: {
+    singular: 'Team Member',
+    plural: 'Team & Staff',
+  },
   admin: {
     useAsTitle: 'email',
+    defaultColumns: ['name', 'email', 'role', 'updatedAt'],
+    group: 'Team & Settings',
+    description: 'Manage staff accounts and administrative permissions.',
   },
   fields: [
     {

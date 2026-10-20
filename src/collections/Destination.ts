@@ -13,9 +13,15 @@ export const Destination: CollectionConfig = {
     update: ({ req }) => hasStaffRole(req.user),
     delete: ({ req }) => hasAdminRole(req.user),
   },
+  labels: {
+    singular: 'Destination Area',
+    plural: 'Destinations & Regions',
+  },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug', 'region', 'publicationStatus'],
+    group: 'Places & Accommodation',
+    description: 'Manage broader geographical regions and valley destinations in northern Pakistan.',
   },
   fields: [
     { name: 'name', type: 'text', required: true },

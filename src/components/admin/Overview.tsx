@@ -55,8 +55,9 @@ export async function Overview({ initPageResult }: AdminViewServerProps) {
   const enquiryValue = enquiries.state === 'available' ? enquiries.total : 'Unavailable';
   const newValue = enquiries.state === 'available' ? enquiries.newCount : 'Unavailable';
   const inProgressValue = enquiries.state === 'available' ? enquiries.inProgressCount : 'Unavailable';
-  const publishedValue = content.destinations + content.places + content.tours
-    + content.experiences + content.articles + content.faqs;
+  const publishedValue = content.published.destinations + content.published.places + content.published.tours
+    + content.published.experiences + content.published.articles + content.published.faqs;
+  const draftsValue = content.draftsAndReview.total;
 
   return (
     <main className="dashboard">
@@ -73,7 +74,7 @@ export async function Overview({ initPageResult }: AdminViewServerProps) {
             <p className="eyebrow"><span className="eyebrowMark" /> Hunza Expeditions <span>•</span> Admin workspace</p>
             <h1 className="title">Operations overview</h1>
             <p className="lede">
-              Your enquiries and travel content, all in one place.
+              Real-time operational enquiries, trip workflows, and editorial publishing queues.
             </p>
           </div>
           <div className="actions">
@@ -84,22 +85,13 @@ export async function Overview({ initPageResult }: AdminViewServerProps) {
               <Inbox aria-hidden="true" /> Review enquiries
             </Link>
             <Link
-              href="/admin/collections/destinations"
+              href="/admin/collections/places"
               className="secondaryAction"
             >
-              <Layers3 aria-hidden="true" /> Manage content <ArrowUpRight aria-hidden="true" />
+              <Layers3 aria-hidden="true" /> Manage places & tours <ArrowUpRight aria-hidden="true" />
             </Link>
           </div>
         </header>
-
-        <section aria-label="Data source status" className="noticeGrid">
-          <div className="notice noticeInfo">
-            <CircleAlert aria-hidden="true" />
-            <p>
-              Enquiries are stored and managed in Payload.
-            </p>
-          </div>
-        </section>
 
         <section aria-label="Business metrics" className="metricGrid">
           <Metric
@@ -115,15 +107,15 @@ export async function Overview({ initPageResult }: AdminViewServerProps) {
             icon={CircleAlert}
           />
           <Metric
-            label="In progress"
-            value={inProgressValue}
-            detail="Being reviewed or quoted"
-            icon={Users}
+            label="Drafts & in review"
+            value={draftsValue}
+            detail={`${content.draftsAndReview.places} places · ${content.draftsAndReview.tours} tours · ${content.draftsAndReview.articles} guides`}
+            icon={Layers3}
           />
           <Metric
             label="Published content"
             value={publishedValue}
-            detail={`${content.destinations} destinations · ${content.places} places · ${content.tours} tours · ${content.experiences} experiences · ${content.articles} guides · ${content.faqs} FAQs`}
+            detail={`${content.published.destinations} regions · ${content.published.places} places · ${content.published.tours} tours · ${content.published.experiences} experiences`}
             icon={Layers3}
           />
         </section>
@@ -147,73 +139,70 @@ export async function Overview({ initPageResult }: AdminViewServerProps) {
 
           <aside className="aside">
             <section className="asideSection">
-              <span className="sectionEyebrow">Connected sources</span>
-              <h2 className="asideTitle">Workspace status</h2>
+              <span className="sectionEyebrow">System status</span>
+              <h2 className="asideTitle">Operations health</h2>
               <dl className="dataList">
                 <div>
-                  <dt><span className="sourceDot" /> Enquiries</dt>
+                  <dt><span className="sourceDot" /> Database</dt>
+                  <dd>PostgreSQL · Live</dd>
+                </div>
+                <div>
+                  <dt><span className="sourceDot" /> Enquiries store</dt>
                   <dd>Payload · Live</dd>
                 </div>
                 <div>
-                  <dt>
-                    <span className="sourceDot" />
-                    Travel content
-                  </dt>
-                  <dd>Payload · Live</dd>
-                </div>
-                <div>
-                  <dt><span className="sourceDotMuted" /> Bookings</dt>
-                  <dd>Not configured</dd>
+                  <dt><span className="sourceDot" /> Outbox pipeline</dt>
+                  <dd>Active</dd>
                 </div>
               </dl>
               <p className="asideNote">
-                Booking and payment tracking is not configured.
+                All records, relationships, and customer data are hosted within verified PostgreSQL storage.
               </p>
             </section>
 
             <section className="asideSection">
-              <span className="sectionEyebrow">Shortcuts</span>
-              <h2 className="asideTitle">Quick links</h2>
+              <span className="sectionEyebrow">Navigation</span>
+              <h2 className="asideTitle">Quick actions</h2>
               <ul className="quickLinks">
                 <li>
-                  <Link href="/admin/collections/destinations">
-                    Manage destinations <ArrowUpRight aria-hidden="true" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin/collections/tours">
-                    Manage tours <ArrowUpRight aria-hidden="true" />
+                  <Link href="/admin/collections/enquiries">
+                    Review trip enquiries <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/admin/collections/places">
-                    Manage places <ArrowUpRight aria-hidden="true" />
+                    Places & attractions <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/tours">
+                    Tours & expeditions <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/place-categories">
+                    Place categories <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/collections/official-designations">
+                    Official designations <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/admin/collections/experiences">
-                    Manage experiences <ArrowUpRight aria-hidden="true" />
+                    Community experiences <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/admin/collections/articles">
-                    Manage travel guides & blogs <ArrowUpRight aria-hidden="true" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin/collections/authors">
-                    Manage author profiles <ArrowUpRight aria-hidden="true" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin/collections/faqs">
-                    Manage FAQs <ArrowUpRight aria-hidden="true" />
+                    Guides & blog posts <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </li>
                 {hasAdminRole(initPageResult.req.user) && (
                   <li>
                     <Link href="/admin/collections/users">
-                      Manage staff access <ArrowUpRight aria-hidden="true" />
+                      Team & staff accounts <ArrowUpRight aria-hidden="true" />
                     </Link>
                   </li>
                 )}

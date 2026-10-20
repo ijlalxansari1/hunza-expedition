@@ -5,6 +5,16 @@ import { adminAccess, operationsAccess } from '../lib/payloadAccess.ts';
 
 export const Enquiry: CollectionConfig = {
   slug: 'enquiries',
+  labels: {
+    singular: 'Enquiry',
+    plural: 'Enquiries',
+  },
+  admin: {
+    useAsTitle: 'referenceId',
+    defaultColumns: ['referenceId', 'fullName', 'email', 'status', 'submittedAt'],
+    group: 'Enquiries & Sales',
+    description: 'Track customer trip enquiries and operational follow-ups.',
+  },
   access: {
     create: operationsAccess,
     read: operationsAccess,

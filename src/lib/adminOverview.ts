@@ -6,8 +6,8 @@ import {
   type EnquiryOverview,
 } from './adminOverviewSummary';
 
-export type ContentOverview =
-  {
+export type ContentOverview = {
+  published: {
     destinations: number;
     places: number;
     tours: number;
@@ -15,6 +15,14 @@ export type ContentOverview =
     articles: number;
     faqs: number;
   };
+  draftsAndReview: {
+    places: number;
+    tours: number;
+    experiences: number;
+    articles: number;
+    total: number;
+  };
+};
 
 export async function getEnquiryOverview(req: PayloadRequest): Promise<EnquiryOverview> {
   const collection = 'enquiries';
@@ -51,7 +59,18 @@ export async function getEnquiryOverview(req: PayloadRequest): Promise<EnquiryOv
 }
 
 export async function getContentOverview(req: PayloadRequest): Promise<ContentOverview> {
-  const [destinations, places, tours, experiences, articles, faqs] = await Promise.all([
+  const [
+    destinations,
+    places,
+    tours,
+    experiences,
+    articles,
+    faqs,
+    placesPending,
+    toursPending,
+    experiencesPending,
+    articlesPending,
+  ] = await Promise.all([
     req.payload.find({
       collection: 'destinations',
       where: { publicationStatus: { equals: 'published' } },
@@ -88,14 +107,49 @@ export async function getContentOverview(req: PayloadRequest): Promise<ContentOv
       limit: 1,
       depth: 0,
     }),
+    req.payload.find({
+      collection: 'places',
+      where: { publicationStatus: { in: ['draft', 'review'] } },
+      limit: 1,
+      depth: 0,
+    }),
+    req.payload.find({
+      collection: 'tours',
+      where: { publicationStatus: { in: ['draft', 'review'] } },
+      limit: 1,
+      depth: 0,
+    }),
+    req.payload.find({
+      collection: 'experiences',
+      where: { publicationStatus: { in: ['draft', 'review'] } },
+      limit: 1,
+      depth: 0,
+    }),
+    req.payload.find({
+      collection: 'articles',
+      where: { publicationStatus: { in: ['draft', 'review'] } },
+      limit: 1,
+      depth: 0,
+    }),
   ]);
 
+  const draftsTotal = placesPending.totalDocs + toursPending.totalDocs + experiencesPending.totalDocs + articlesPending.totalDocs;
+
   return {
-    destinations: destinations.totalDocs,
-    places: places.totalDocs,
-    tours: tours.totalDocs,
-    experiences: experiences.totalDocs,
-    articles: articles.totalDocs,
-    faqs: faqs.totalDocs,
+    published: {
+      destinations: destinations.totalDocs,
+      places: places.totalDocs,
+      tours: tours.totalDocs,
+      experiences: experiences.totalDocs,
+      articles: articles.totalDocs,
+      faqs: faqs.totalDocs,
+    },
+    draftsAndReview: {
+      places: placesPending.totalDocs,
+      tours: toursPending.totalDocs,
+      experiences: experiencesPending.totalDocs,
+      articles: articlesPending.totalDocs,
+      total: draftsTotal,
+    },
   };
 }

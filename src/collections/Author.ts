@@ -11,7 +11,7 @@ export const Author: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug', 'publicationStatus', 'updatedAt'],
-    group: 'Travel content',
+    group: 'Stories, Guides & Pages',
   },
   fields: [
     { name: 'name', type: 'text', required: true },

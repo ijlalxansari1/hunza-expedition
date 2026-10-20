@@ -20,6 +20,19 @@ interface JourneyBuilderProps {
 export function JourneyBuilder({ destinations }: JourneyBuilderProps) {
   const searchParams = useSearchParams();
   const preSelectedSlug = searchParams ? searchParams.get("destination") : null;
+  const preSelectedList = searchParams ? searchParams.get("destinations") : null;
+
+  const initialSelectedDestinations = React.useMemo(() => {
+    if (preSelectedList) {
+      return preSelectedList.split(",").map((s) => decodeURIComponent(s.trim())).filter(Boolean);
+    }
+    if (preSelectedSlug) {
+      return destinations
+        .filter((destination) => destination.slug === preSelectedSlug)
+        .map((destination) => destination.name);
+    }
+    return [];
+  }, [preSelectedList, preSelectedSlug, destinations]);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,9 +60,7 @@ export function JourneyBuilder({ destinations }: JourneyBuilderProps) {
     accommodationStyle: "comfort_hotels" as "standard_guesthouse" | "comfort_hotels" | "heritage_boutique" | "flexible",
 
     // Step 3: Destinations
-    selectedDestinations: destinations
-      .filter((destination) => destination.slug === preSelectedSlug)
-      .map((destination) => destination.name),
+    selectedDestinations: initialSelectedDestinations,
 
     // Step 4: Interests
     selectedInterests: [] as string[],

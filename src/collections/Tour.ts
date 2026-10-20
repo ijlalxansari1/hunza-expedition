@@ -13,9 +13,15 @@ export const Tour: CollectionConfig = {
     update: ({ req }) => hasStaffRole(req.user),
     delete: ({ req }) => hasAdminRole(req.user),
   },
+  labels: {
+    singular: 'Tour',
+    plural: 'Tours & Expeditions',
+  },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'durationDays', 'publicationStatus'],
+    defaultColumns: ['title', 'slug', 'durationDays', 'difficulty', 'publicationStatus'],
+    group: 'Trips & Departures',
+    description: 'Manage packaged itineraries, expeditions, and travel products.',
   },
   fields: [
     { name: 'title', type: 'text', required: true },

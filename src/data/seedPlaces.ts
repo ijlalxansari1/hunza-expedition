@@ -11,41 +11,74 @@ function toSlug(value: string): string {
 }
 
 function categoryAssignment(name: string): { primaryCategorySlug: string; additionalCategorySlugs?: string[] } {
-  if (/fort|historic|village/i.test(name)) {
+  if (/fort|watchtower|castle/i.test(name)) {
+    return { primaryCategorySlug: 'forts', additionalCategorySlugs: ['culture-heritage'] };
+  }
+  if (/historic|village|settlement|bazaar/i.test(name)) {
     return { primaryCategorySlug: 'culture-heritage' };
   }
-  if (/lake|scenic|desert/i.test(name)) {
+  if (/glacier/i.test(name)) {
+    return { primaryCategorySlug: 'glaciers', additionalCategorySlugs: ['natural-wonders'] };
+  }
+  if (/meadow|pasture/i.test(name)) {
+    return { primaryCategorySlug: 'meadows', additionalCategorySlugs: ['natural-wonders'] };
+  }
+  if (/pass/i.test(name)) {
+    return { primaryCategorySlug: 'mountain-passes', additionalCategorySlugs: ['natural-wonders'] };
+  }
+  if (/national park/i.test(name)) {
+    return { primaryCategorySlug: 'protected-areas', additionalCategorySlugs: ['natural-wonders'] };
+  }
+  if (/hotel|lodge|camp|stay|resort/i.test(name)) {
+    return { primaryCategorySlug: 'places-to-stay' };
+  }
+  if (/lake|river|waterfall/i.test(name)) {
     return { primaryCategorySlug: 'lakeside-scenic', additionalCategorySlugs: ['natural-wonders'] };
   }
-  if (/bridge/i.test(name)) {
-    return { primaryCategorySlug: 'adventure-outdoors' };
-  }
-  if (/mountain|peak|pass|glacier|cones/i.test(name)) {
+  if (/peak|mountain|range/i.test(name)) {
     return { primaryCategorySlug: 'mountains-peaks', additionalCategorySlugs: ['natural-wonders'] };
   }
   return { primaryCategorySlug: 'natural-wonders' };
 }
 
+const placeCoordinates: Record<string, { lat: number; lng: number }> = {
+  'baltit-fort': { lat: 36.3262, lng: 74.6713 },
+  'altit-fort': { lat: 36.3144, lng: 74.6936 },
+  'attabad-lake': { lat: 36.3389, lng: 74.8694 },
+  'passu-cones-passu-glacier': { lat: 36.4682, lng: 74.8947 },
+  'hopar-valley-hopar-glacier': { lat: 36.2167, lng: 74.7833 },
+  'minapin-diran-base-camp-approach': { lat: 36.2514, lng: 74.5369 },
+  'katpana-sarfaranga-cold-deserts': { lat: 35.3142, lng: 75.5861 },
+  'shigar-fort-fong-khar': { lat: 35.4286, lng: 75.7428 },
+  'lower-upper-kachura-lakes': { lat: 35.4481, lng: 75.4497 },
+  'passu-suspension-bridges': { lat: 36.4862, lng: 74.8872 },
+  'borith-lake-wildlife-sanctuary': { lat: 36.4278, lng: 74.8611 },
+  'khunjerab-pass-4-693m': { lat: 36.8497, lng: 75.4281 },
+};
+
 export const initialPlaces = initialDestinations.flatMap((destination) => (
-  destination.placesOfInterest?.map((place) => ({
-    name: place.name,
-    slug: `${destination.slug}-${toSlug(place.name)}`,
-    destinationSlug: destination.slug,
-    destinationName: destination.name,
-    region: destination.region,
-    shortDescription: place.summary,
-    description: place.description ?? '',
-    heroImageUrl: place.imageUrl ?? destination.heroImageUrl,
-    imageAlt: place.imageAlt ?? place.name,
-    locationNote: place.locationNote ?? '',
-    ...categoryAssignment(place.name),
-    geographicArea: destination.name,
-    coordinates: destination.coordinates
-      ? { lat: destination.coordinates.lat, lng: destination.coordinates.lng }
-      : undefined,
-    showOnMap: false,
-    publicationStatus: 'published' as const,
-  })) ?? []
+  destination.placesOfInterest?.map((place) => {
+    const slugSuffix = toSlug(place.name);
+    const specificCoords = placeCoordinates[slugSuffix] ?? destination.coordinates;
+
+    return {
+      name: place.name,
+      slug: `${destination.slug}-${slugSuffix}`,
+      destinationSlug: destination.slug,
+      destinationName: destination.name,
+      region: destination.region,
+      shortDescription: place.summary,
+      description: place.description ?? '',
+      heroImageUrl: place.imageUrl ?? destination.heroImageUrl,
+      imageAlt: place.imageAlt ?? place.name,
+      locationNote: place.locationNote ?? '',
+      ...categoryAssignment(place.name),
+      geographicArea: destination.name,
+      coordinates: specificCoords,
+      showOnMap: Boolean(specificCoords),
+      publicationStatus: 'published' as const,
+    };
+  }) ?? []
 ));
 
 export const proposedPlaceSeeds = [

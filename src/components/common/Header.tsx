@@ -8,6 +8,8 @@ import { Container } from "../ui/Container";
 import { Button } from "../ui/Button";
 import { useBookingCart } from "@/components/booking/BookingCartProvider";
 
+import { WeatherMarquee } from "./WeatherMarquee";
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -21,7 +23,11 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#dce5dc] transition-all">
+    <>
+      {/* Live Gilgit-Baltistan Weather Marquee */}
+      <WeatherMarquee />
+
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#dce5dc] transition-all">
       {/* Top Banner with operating note */}
       <div className="bg-[#01411c] text-stone-200 text-xs py-1.5 px-4 text-center font-normal tracking-wide">
         <span>Curated mountain journeys & cultural experiences in Gilgit-Baltistan, Pakistan</span>
@@ -187,5 +193,6 @@ export function Header() {
         </div>
       )}
     </header>
+    </>
   );
 }
